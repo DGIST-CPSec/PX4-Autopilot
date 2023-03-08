@@ -148,6 +148,8 @@ void TECSReferenceModel::update(const float dt, const AltitudeReferenceState &se
 	}
 
 	// Consider the altitude rate setpoint already smooth. No need to filter further, simply hold the value for the altitude rate reference.
+	const bool altitude_rate_control_enable{PX4_ISFINITE(setpoint.alt_rate)};
+
 	if (PX4_ISFINITE(setpoint.alt_rate)) {
 		_alt_rate_ref = setpoint.alt_rate;
 
@@ -155,17 +157,22 @@ void TECSReferenceModel::update(const float dt, const AltitudeReferenceState &se
 		_alt_rate_ref = 0.0f;
 	}
 
-
 	// Altitude setpoint reference
 	const bool altitude_control_enable{PX4_ISFINITE(setpoint.alt)};
 	_alt_control_traj_generator.setMaxJerk(param.jerk_max);
 	_alt_control_traj_generator.setMaxAccel(param.vert_accel_limit);
 	_alt_control_traj_generator.setMaxVel(fmax(param.max_climb_rate, param.max_sink_rate));
 
-	if (altitude_control_enable) {
-		const float target_climbrate = math::min(param.target_climbrate, param.max_climb_rate);
-		const float target_sinkrate = math::min(param.target_sinkrate, param.max_sink_rate);
+	const float target_climbrate = math::min(param.target_climbrate, param.max_climb_rate);
+	const float target_sinkrate = math::min(param.target_sinkrate, param.max_sink_rate);
 
+	if (altitude_rate_control_enable) {
+		float altitude_rate_target = math::constrain(_alt_rate_ref, -target_sinkrate, target_climbrate);
+
+		_alt_control_traj_generator.updateDurations(altitude_rate_target);
+		_alt_control_traj_generator.updateTraj(dt);
+
+	} else if (altitude_control_enable) {
 		const float delta_trajectory_to_target_m = setpoint.alt - _alt_control_traj_generator.getCurrentPosition();
 
 		float altitude_rate_target = math::signNoZero<float>(delta_trajectory_to_target_m) *
