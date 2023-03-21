@@ -546,6 +546,7 @@ std::string get_absolute_binary_path(const std::string &argv0)
 int run_startup_script(const std::string &commands_file, const std::string &absolute_binary_path,
 		       int instance)
 {
+	printf("(((((run_startup_script function in call)))))\n");
 	std::string shell_command("/bin/sh ");
 
 	shell_command += commands_file + ' ' + std::to_string(instance);

@@ -559,7 +559,7 @@ private:
 	mavlink_status_t	_mavlink_status {};
 
 	/* states */
-	bool			_hil_enabled{false};		/**< Hardware In the Loop mode */
+	bool			_hil_enabled{true};		/**< Hardware In the Loop mode */
 	bool			_is_usb_uart{false};		/**< Port is USB */
 	bool			_wait_to_transmit{false};  	/**< Wait to transmit until received messages. */
 	bool			_received_messages{false};	/**< Whether we've received valid mavlink messages. */

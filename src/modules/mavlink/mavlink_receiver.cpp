@@ -2317,6 +2317,7 @@ MavlinkReceiver::handle_message_hil_sensor(mavlink_message_t *msg)
 	mavlink_msg_hil_sensor_decode(msg, &hil_sensor);
 
 	const uint64_t timestamp = hrt_absolute_time();
+	PX4_INFO(":::::TIMESTAMP::::: handle_message_hil_sensor: ");
 
 	// temperature only updated with baro
 	float temperature = NAN;
@@ -2336,7 +2337,7 @@ MavlinkReceiver::handle_message_hil_sensor(mavlink_message_t *msg)
 			if (PX4_ISFINITE(temperature)) {
 				_px4_gyro->set_temperature(temperature);
 			}
-
+			PX4_INFO("Gyroscope: ");
 			_px4_gyro->update(timestamp, hil_sensor.xgyro, hil_sensor.ygyro, hil_sensor.zgyro);
 		}
 	}
@@ -3151,6 +3152,7 @@ MavlinkReceiver::handle_message_gimbal_device_attitude_status(mavlink_message_t 
 void
 MavlinkReceiver::run()
 {
+	printf("<-<-<- MavlinkReceiver::run() FUNCTION CALL ->->->\n");
 	/* set thread name */
 	{
 		char thread_name[17];
@@ -3251,6 +3253,8 @@ MavlinkReceiver::run()
 
 			// only start accepting messages on UDP once we're sure who we talk to
 			if (_mavlink->get_protocol() != Protocol::UDP || _mavlink->get_client_source_initialized()) {
+			PX4_INFO("<-<-<- :: PX4_INFO CALL :: mavlink_receiver.cpp 3256 ->->->\n"); // TARGET:
+
 #endif // MAVLINK_UDP
 
 				/* if read failed, this loop won't execute */
@@ -3337,11 +3341,15 @@ MavlinkReceiver::run()
 			usleep(10000);
 		}
 
+			// printf("<-<-<- PX4_INFO PARTNER IP ACCESS HERE:: 3342 ->->->\n"); // TARGET:
+
 		const hrt_abstime t = hrt_absolute_time();
 
 		CheckHeartbeats(t);
 
 		if (t - last_send_update > timeout * 1000) {
+			// PX4_INFO("<-<-<- :: PX4_INFO CALL :: mavlink_receiver.cpp 3349 ->->->\n"); // TARGET:
+
 			_mission_manager.check_active_mission();
 			_mission_manager.send();
 
