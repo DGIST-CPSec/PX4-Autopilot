@@ -3253,7 +3253,7 @@ MavlinkReceiver::run()
 
 			// only start accepting messages on UDP once we're sure who we talk to
 			if (_mavlink->get_protocol() != Protocol::UDP || _mavlink->get_client_source_initialized()) {
-			PX4_INFO("<-<-<- :: PX4_INFO CALL :: mavlink_receiver.cpp 3256 ->->->\n"); // TARGET:
+			// PX4_INFO("<-<-<- :: PX4_INFO CALL :: mavlink_receiver.cpp 3256 ->->->\n"); // TARGET:
 
 #endif // MAVLINK_UDP
 

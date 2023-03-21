@@ -197,9 +197,9 @@ void SimulatorMavlink::update_sensors(const hrt_abstime &time, const mavlink_hil
 
 	// accel
 	if ((sensors.fields_updated & SensorSource::ACCEL) == SensorSource::ACCEL) {
-		PX4_INFO("SimulatorMavlink :: update_sensors :: ACCEL\n");
-		CONSOLE_PRINT_EVENT(0, 0, "SimulatorMavlink :: update_sensors :: ACCEL\n");
-		printf("SimulatorMavlink :: update_sensors :: ACCEL\n");
+		// PX4_INFO("SimulatorMavlink :: update_sensors :: ACCEL\n");
+		// CONSOLE_PRINT_EVENT(0, 0, "SimulatorMavlink :: update_sensors :: ACCEL\n");
+		// printf("SimulatorMavlink :: update_sensors :: ACCEL\n");
 		// FIXME: print does not work right now
 		if (sensors.id >= ACCEL_COUNT_MAX) {
 			PX4_ERR("Number of simulated accelerometer %d out of range. Max: %d", sensors.id, ACCEL_COUNT_MAX);
@@ -248,8 +248,8 @@ void SimulatorMavlink::update_sensors(const hrt_abstime &time, const mavlink_hil
 	// gyro
 	if ((sensors.fields_updated & SensorSource::GYRO) == SensorSource::GYRO) {
 		// FIXME: I added log line
-		PX4_INFO("SimulatorMavlink :: update_sensors :: GYRO \n");
-		printf("SimulatorMavlink :: update_sensors :: GYRO \n");
+		// PX4_INFO("SimulatorMavlink :: update_sensors :: GYRO \n");
+		// printf("SimulatorMavlink :: update_sensors :: GYRO \n");
 
 		if (sensors.id >= GYRO_COUNT_MAX) {
 			PX4_ERR("Number of simulated gyroscope %d out of range. Max: %d", sensors.id, GYRO_COUNT_MAX);
@@ -479,7 +479,7 @@ void SimulatorMavlink::handle_message_hil_gps(const mavlink_message_t *msg)
 
 void SimulatorMavlink::handle_message_hil_sensor(const mavlink_message_t *msg)
 {
-	PX4_INFO_RAW("handle_message_hil_sensor function");
+	// PX4_INFO_RAW("handle_message_hil_sensor function");
 
 	mavlink_hil_sensor_t imu;
 	mavlink_msg_hil_sensor_decode(msg, &imu);
@@ -534,12 +534,13 @@ void SimulatorMavlink::handle_message_hil_state_quaternion(const mavlink_message
 
 	uint64_t timestamp = hrt_absolute_time();
 
+	// TARGET: get hil sensor value here>>
+
 	/* angular velocity */
 	vehicle_angular_velocity_s hil_angular_velocity{};
 	{
 		hil_angular_velocity.timestamp = timestamp;
-		PX4_INFO_RAW("HIL: rollspeed: %f, pitchspeed: %f, yawspeed: %f", (double)hil_state.rollspeed, (double)hil_state.pitchspeed,
-			  (double)hil_state.yawspeed);
+		// PX4_INFO_RAW("HIL: rollspeed: %f, pitchspeed: %f, yawspeed: %f", (double)hil_state.rollspeed, (double)hil_state.pitchspeed, (double)hil_state.yawspeed);
 
 		hil_angular_velocity.xyz[0] = hil_state.rollspeed;
 		hil_angular_velocity.xyz[1] = hil_state.pitchspeed;
