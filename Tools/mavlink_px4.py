@@ -953,7 +953,6 @@ class MAVLink_global_position_int_message(MAVLink_message):
                 self.vy = vy
                 self.vz = vz
                 self.hdg = hdg
-                print(lat, lon, alt, relative_alt, vx, vy, vz, hdg)
 
         def pack(self, mav):
                 return MAVLink_message.pack(self, mav, 104, struct.pack('<IiiiihhhH', self.time_boot_ms, self.lat, self.lon, self.alt, self.relative_alt, self.vx, self.vy, self.vz, self.hdg))

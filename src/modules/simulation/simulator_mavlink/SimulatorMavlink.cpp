@@ -197,10 +197,9 @@ void SimulatorMavlink::update_sensors(const hrt_abstime &time, const mavlink_hil
 
 	// accel
 	if ((sensors.fields_updated & SensorSource::ACCEL) == SensorSource::ACCEL) {
-		// PX4_INFO("SimulatorMavlink :: update_sensors :: ACCEL\n");
+		// PX4_INFO("SimulatorMavlink :: update_sensors :: ACCEL\n"); // PINNED!
 		// CONSOLE_PRINT_EVENT(0, 0, "SimulatorMavlink :: update_sensors :: ACCEL\n");
 		// printf("SimulatorMavlink :: update_sensors :: ACCEL\n");
-		// FIXME: print does not work right now
 		if (sensors.id >= ACCEL_COUNT_MAX) {
 			PX4_ERR("Number of simulated accelerometer %d out of range. Max: %d", sensors.id, ACCEL_COUNT_MAX);
 			return;
@@ -534,7 +533,8 @@ void SimulatorMavlink::handle_message_hil_state_quaternion(const mavlink_message
 
 	uint64_t timestamp = hrt_absolute_time();
 
-	// TARGET: get hil sensor value here>>
+	// PINNED!: get hil sensor value here>>
+	// PX4_INFO_RAW("HIL: rollspeed: %f, pitchspeed: %f, yawspeed: %f\n", (double)hil_state.rollspeed, (double)hil_state.pitchspeed, (double)hil_state.yawspeed);
 
 	/* angular velocity */
 	vehicle_angular_velocity_s hil_angular_velocity{};
@@ -1641,7 +1641,6 @@ int simulator_mavlink_main(int argc, char *argv[])
 			}
 
 			system_usleep(100);
-			printf("SimulatorMavlink.cpp:1639\n\n");
 		}
 
 #endif
