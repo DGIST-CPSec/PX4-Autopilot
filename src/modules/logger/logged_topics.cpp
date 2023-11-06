@@ -47,7 +47,7 @@ void LoggedTopics::add_default_topics()
 {
 	add_topic("action_request");
 	add_topic("actuator_armed");
-	add_topic("actuator_controls_0", 50);
+	/* add_topic("actuator_controls_0", 50);
 	add_topic("actuator_controls_1", 100);
 	add_topic("actuator_controls_2", 100);
 	add_optional_topic("actuator_controls_status_0", 300);
@@ -109,7 +109,7 @@ void LoggedTopics::add_default_topics()
 	add_optional_topic("takeoff_status", 1000);
 	add_optional_topic("tecs_status", 200);
 	add_optional_topic("tiltrotor_extra_controls", 100);
-	add_topic("trajectory_setpoint", 200);
+	add_topic("trajectory_setpoint", 200); */
 	add_topic("transponder_report");
 	add_topic("vehicle_acceleration", 50);
 	add_topic("vehicle_air_data", 200);
@@ -208,7 +208,7 @@ void LoggedTopics::add_default_topics()
 	add_topic_multi("battery_status", 200, 2);
 	add_topic_multi("differential_pressure", 1000, 2);
 	add_topic_multi("distance_sensor", 1000, 2);
-	add_optional_topic_multi("sensor_accel", 1000, 4);
+	add_optional_topic_multi("sensor_accel", 1, 4);
 	add_optional_topic_multi("sensor_baro", 1000, 4);
 	add_topic_multi("sensor_gps", 1000, 2);
 	add_topic_multi("sensor_gnss_relative", 1000, 1);

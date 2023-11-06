@@ -115,6 +115,21 @@ void PX4Accelerometer::update(const hrt_abstime &timestamp_sample, float x, floa
 {
 	// Apply rotation (before scaling)
 	rotate_3f(_rotation, x, y, z);
+	// @leeminki02 -> add attack simulation code
+	bool attacked = true;
+	uint t_milis = timestamp_sample / 1000;
+	double freq = 0.1; // unit: Hz
+    	float atk_amp = 10; // unit: m/s^2? <- need to check
+	if (attacked
+		// && ((t_milis % 5000) < 1000)
+		){
+		float atk_offset = cosf((float) (2.0 * M_PI * t_milis * freq)) * atk_amp;
+        x += atk_offset;
+        y += atk_offset;
+        z += atk_offset;
+	PX4_INFO("attacked with offset: %f", (double)atk_offset);
+	}
+	// @leeminki02 end of edit
 
 	// publish
 	sensor_accel_s report;
@@ -148,6 +163,24 @@ void PX4Accelerometer::updateFIFO(sensor_accel_fifo_s &sample)
 	sample.scale = _scale;
 	sample.timestamp = hrt_absolute_time();
 	_sensor_fifo_pub.publish(sample);
+	// @leeminki02 -> add attack simulation code
+	bool attacked = true;
+	uint t_milis = sample.timestamp / 1000;
+	double freq = 0.0001; // unit: Hz
+	/*
+	 * 0.001 -> looks like 1 Hz
+	 */
+    	float atk_amp = 1; // unit: m/s^2? <- need to check
+	float atck_ofsts[3] = {0, 0, 0};
+	if (attacked
+		&& ((t_milis % 20000) >= 15000) && (t_milis >= 20000)
+		){
+		float atk_offset = cosf((float) (2.0 * M_PI * t_milis * freq)) * atk_amp;
+		atck_ofsts[0] = atk_offset;
+		atck_ofsts[1] = atk_offset;
+		atck_ofsts[2] = atk_offset;
+	}
+	// @leeminki02 end of edit
 
 
 	// publish
@@ -159,9 +192,9 @@ void PX4Accelerometer::updateFIFO(sensor_accel_fifo_s &sample)
 
 	// trapezoidal integration (equally spaced)
 	const float scale = _scale / (float)N;
-	report.x = (0.5f * (_last_sample[0] + sample.x[N - 1]) + sum(sample.x, N - 1)) * scale;
-	report.y = (0.5f * (_last_sample[1] + sample.y[N - 1]) + sum(sample.y, N - 1)) * scale;
-	report.z = (0.5f * (_last_sample[2] + sample.z[N - 1]) + sum(sample.z, N - 1)) * scale;
+	report.x = (0.5f * (_last_sample[0] + sample.x[N - 1]) + sum(sample.x, N - 1)) * scale + atck_ofsts[0];
+	report.y = (0.5f * (_last_sample[1] + sample.y[N - 1]) + sum(sample.y, N - 1)) * scale + atck_ofsts[1];
+	report.z = (0.5f * (_last_sample[2] + sample.z[N - 1]) + sum(sample.z, N - 1)) * scale + atck_ofsts[2];
 
 	_last_sample[0] = sample.x[N - 1];
 	_last_sample[1] = sample.y[N - 1];
@@ -181,3 +214,4 @@ void PX4Accelerometer::UpdateClipLimit()
 	// 99.9% of potential max
 	_clip_limit = math::constrain((_range / _scale) * 0.999f, 0.f, (float)INT16_MAX);
 }
+

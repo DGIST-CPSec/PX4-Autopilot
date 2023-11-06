@@ -518,12 +518,12 @@ void SimulatorMavlink::handle_message_hil_state_quaternion(const mavlink_message
 	mavlink_msg_hil_state_quaternion_decode(msg, &hil_state);
 
 	uint64_t timestamp = hrt_absolute_time();
-	// PINNED!
+	/* // PINNED!
 	printf("HIL[%i]: \n - rollspeed: %f\t pitchspeed: %f\t yawspeed: %f\n - Position: lat:%i\t lon:%i\t alt:%i\n\n",
 		hil_state.time_usec,
 		hil_state.rollspeed, hil_state.pitchspeed, hil_state.yawspeed,
 		hil_state.lat, hil_state.lon, hil_state.alt
-		);
+		); */
 
 	/* angular velocity */
 	vehicle_angular_velocity_s hil_angular_velocity{};
